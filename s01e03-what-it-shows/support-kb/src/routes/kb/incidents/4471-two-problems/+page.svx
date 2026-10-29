@@ -1,0 +1,61 @@
+---
+layout: runbook
+title: '#4471 · two problems, not one'
+owner: s01e03 harness
+status: proposed
+reviewed: 2026-10-28
+signature: 'v1.eyJzdWIiOiIxODAxIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMzMDg3ODUsImV4cCI6MTc5MzM5NTE4NX0.MxkLChSVGMz2txA4qck4HDwHNWULmXzuWgKU0AkWoAE'
+---
+
+<script>
+  import CauseTable from '#lib/kb/CauseTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+#4471 was filed as one known bug: the parser reads `mm/dd` and flips dates for day-first
+tenants. Re-triaging the reports by **computed cause** shows the ticket holds **two** bugs,
+not one. One of them has had no ticket of its own.
+
+<Callout>
+Not one bug reported many times. Two bugs, with two different fixes, merged on subject alone.
+</Callout>
+
+## What #4471 really holds
+
+<CauseTable ticket={4471} />
+
+The table is built at render time from the export, so the counts stay honest. Intake's tag is
+not the cause: it guesses from the reporter's browser the moment the report arrives, and it is
+wrong often enough to hide a whole bug. The cause is computed from the tenant's locale and form.
+
+## The two problems
+
+**1 · parser — 379 reports.** The shared parser reads every date month-first. Every tenant
+writes day-first, so `7 April` ships as `4 July`. This reaches people on every channel (app,
+email, form), across all 11 tenants. This is what #4471 is really about.
+Ticket: [parser reads dates month-first](https://github.com/paulklecha/mega-dev-assignments/issues/1).
+
+**2 · hint — 33 reports.** A different bug, merged into #4471 by subject. The **booking-v3**
+form prints the hint `MM/DD/YYYY`. Its tenants are day-first, so their people type the date
+month-first as told, and the form stores the wrong date **at entry**, before the parser runs.
+It shows up on the **form** channel only, for the three booking-v3 tenants
+(`alder.physio`, `copper.studio`, `pale.harbour`). Fixing the parser would not fix it.
+Ticket: [booking-v3 form hint stores wrong date](https://github.com/paulklecha/mega-dev-assignments/issues/2).
+
+## Count once, but count the right things
+
+- The export had 427 rows; its pages overlap, so 15 were the same report twice. Counted by id,
+  #4471 holds **412** reports.
+- Split by cause: **379** parser + **33** hint = 412.
+- Five reports the desk read as a one-day move are still parser by cause; they are footnoted,
+  not split out.
+
+## Lessons
+
+- Merging on subject is fast, but it buries a second bug with the same symptom. Re-read the
+  merge when a "known" ticket keeps growing.
+- A number that can be computed should be computed. The intake tag disagreed with the cause on
+  38 reports; trusting it would have split the counts wrong.
+
+<RenderStamp {signature} />

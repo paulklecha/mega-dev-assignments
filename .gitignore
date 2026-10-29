@@ -1,0 +1,7 @@
+chrome-profile/
+chrome.log
+*.log
+log.md
+*.ticket
+.receipts.json
+node_modules/

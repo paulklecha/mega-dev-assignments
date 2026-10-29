@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>#4471 · two problems, not one · support kb</title>
+<style>
+:root { --bg:#fbfaf7; --fg:#1d1d1b; --muted:#6b6a66; --line:#e3e0d8; --accent:#2f6f5e; --warn:#b4501f; --warn-bg:#fbeee6; --note-bg:#eef5f2; --mono: ui-monospace,'Cascadia Code',Menlo,monospace; }
+@media (prefers-color-scheme: dark){ :root { --bg:#171716; --fg:#ecebe6; --muted:#9c9a93; --line:#34332f; --accent:#6fbfa6; --warn:#f0905d; --warn-bg:#3a2418; --note-bg:#1d2c27; } }
+body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui,sans-serif; }
+.kb table { border-collapse:collapse; width:100%; margin:1rem 0; font-size:0.92rem; }
+.kb th,.kb td { border-bottom:1px solid var(--line); padding:0.35rem 0.5rem; text-align:left; }
+.kb code { font-family:var(--mono); font-size:0.88em; }
+.kb a { color:var(--accent); }
+.kb { max-width:760px; margin:0 auto; padding:2rem 16px 4rem; }
+.crumb { font:0.8rem var(--mono); text-decoration:none; color:var(--muted); }
+h1 { margin:0.25rem 0 0.5rem; line-height:1.2; }
+.meta { display:flex; flex-wrap:wrap; gap:0.5rem 1rem; color:var(--muted); font-size:0.85rem; margin:0; }
+.status { border:1px solid var(--line); border-radius:99px; padding:0 0.6rem; }
+.stale { color:var(--warn); font-weight:600; }
+.banner { background:var(--warn-bg); color:var(--warn); padding:0.6rem 1rem; border-radius:6px; }
+footer { margin-top:3rem; color:var(--muted); font-size:0.8rem; border-top:1px solid var(--line); padding-top:1rem; }
+/* Callout */
+aside { border-left:4px solid var(--accent); padding:0.5rem 1rem; margin:1rem 0; background:var(--note-bg); }
+aside.warn { border-color:var(--warn); background:var(--warn-bg); }
+/* CauseTable */
+.sum { font-size:1.1rem; }
+.tags { color:var(--muted); font-size:0.85em; }
+.note { color:var(--muted); font-size:0.85em; }
+.wrong td { background:var(--warn-bg); }
+.wrong td:last-child { color:var(--warn); font-weight:600; }
+/* RenderStamp */
+.stamp { margin:2rem 0 0; font:0.85rem var(--mono); color:var(--muted); }
+.stamp b { color:var(--accent); letter-spacing:0.04em; }
+.missing { color:var(--warn); }
+</style>
+</head>
+<body>
+<div class="kb">
+  <header>
+    <a class="crumb" href="/kb">support desk · kb</a>
+    <h1>#4471 · two problems, not one</h1>
+    <p class="meta">
+      <span>owner <b>s01e03 harness</b></span>
+      <span class="status proposed">proposed</span>
+      <span>reviewed 2026-10-28 · 1 days ago</span>
+    </p>
+  </header>
+  <main>
+<p>#4471 was filed as one known bug: the parser reads <code>mm/dd</code> and flips dates for day-first tenants. Re-triaging the reports by <strong>computed cause</strong> shows the ticket holds <strong>two</strong> bugs, not one. One of them has had no ticket of its own.</p>
+
+<aside class="note">Not one bug reported many times. Two bugs, with two different fixes, merged on subject alone.</aside>
+
+<h2>What #4471 really holds</h2>
+
+<p class="sum"><strong>412</strong> reports merged into #4471 · <strong>2</strong> causes</p>
+<table>
+  <thead><tr><th>cause</th><th>reports</th><th>tagged as</th><th>tenants</th><th>seen</th><th></th></tr></thead>
+  <tbody>
+    <tr><td><code>parser</code></td><td>379</td><td class="tags">parser ×356 · hint ×23</td><td>11</td><td>2026-04-01 → 2026-10-04</td><td>#4471</td></tr>
+    <tr class="wrong"><td><code>hint</code></td><td>33</td><td class="tags">hint ×18 · parser ×15</td><td>3</td><td>2026-04-17 → 2026-09-22</td><td>not this ticket — no ticket of its own</td></tr>
+  </tbody>
+</table>
+<p class="note">5 reports read as a one-day move; filed under <code>parser</code> by tenant.</p>
+<p>The table is built at render time from the export, so the counts stay honest. Intake's tag is not the cause: it guesses from the reporter's browser the moment the report arrives, and it is wrong often enough to hide a whole bug. The cause is computed from the tenant's locale and form.</p>
+
+<h2>The two problems</h2>
+<p><strong>1 · parser — 379 reports.</strong> The shared parser reads every date month-first. Every tenant writes day-first, so <code>7 April</code> ships as <code>4 July</code>. This reaches people on every channel (app, email, form), across all 11 tenants. This is what #4471 is really about. Ticket: <a href="https://github.com/paulklecha/mega-dev-assignments/issues/1">parser reads dates month-first</a>.</p>
+<p><strong>2 · hint — 33 reports.</strong> A different bug, merged into #4471 by subject. The <strong>booking-v3</strong> form prints the hint <code>MM/DD/YYYY</code>. Its tenants are day-first, so their people type the date month-first as told, and the form stores the wrong date <strong>at entry</strong>, before the parser runs. It shows up on the <strong>form</strong> channel only, for the three booking-v3 tenants (<code>alder.physio</code>, <code>copper.studio</code>, <code>pale.harbour</code>). Fixing the parser would not fix it. Ticket: <a href="https://github.com/paulklecha/mega-dev-assignments/issues/2">booking-v3 form hint stores wrong date</a>.</p>
+
+<h2>Count once, but count the right things</h2>
+<ul>
+  <li>The export had 427 rows; its pages overlap, so 15 were the same report twice. Counted by id, #4471 holds <strong>412</strong> reports.</li>
+  <li>Split by cause: <strong>379</strong> parser + <strong>33</strong> hint = 412.</li>
+  <li>Five reports the desk read as a one-day move are still parser by cause; they are footnoted, not split out.</li>
+</ul>
+
+<h2>Lessons</h2>
+<ul>
+  <li>Merging on subject is fast, but it buries a second bug with the same symptom. Re-read the merge when a "known" ticket keeps growing.</li>
+  <li>A number that can be computed should be computed. The intake tag disagreed with the cause on 38 reports; trusting it would have split the counts wrong.</li>
+</ul>
+
+<p class="stamp">desk ref <b>DR-T1XD-PN40</b></p>
+  </main>
+  <footer>Pages are written by people. Tables and charts are built from data at render time.</footer>
+</div>
+</body>
+</html>

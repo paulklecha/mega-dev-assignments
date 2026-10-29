@@ -68,6 +68,12 @@ aside.warn { border-color:var(--warn); background:var(--warn-bg); }
 <p><strong>1 · parser — 379 reports.</strong> The shared parser reads every date month-first. Every tenant writes day-first, so <code>7 April</code> ships as <code>4 July</code>. This reaches people on every channel (app, email, form), across all 11 tenants. This is what #4471 is really about. Ticket: <a href="https://github.com/paulklecha/mega-dev-assignments/issues/1">parser reads dates month-first</a>.</p>
 <p><strong>2 · hint — 33 reports.</strong> A different bug, merged into #4471 by subject. The <strong>booking-v3</strong> form prints the hint <code>MM/DD/YYYY</code>. Its tenants are day-first, so their people type the date month-first as told, and the form stores the wrong date <strong>at entry</strong>, before the parser runs. It shows up on the <strong>form</strong> channel only, for the three booking-v3 tenants (<code>alder.physio</code>, <code>copper.studio</code>, <code>pale.harbour</code>). Fixing the parser would not fix it. Ticket: <a href="https://github.com/paulklecha/mega-dev-assignments/issues/2">booking-v3 form hint stores wrong date</a>.</p>
 
+<h2>Resolved (desk, #4471 closed 05 Oct)</h2>
+<ul>
+  <li><strong>parser — FIXED.</strong> <code>fix(dates): parse dd/mm for eu locales</code>. Ticket <a href="https://github.com/paulklecha/mega-dev-assignments/issues/1">#1</a> closed as completed.</li>
+  <li><strong>hint — WON'T FIX.</strong> booking-v3 form retired, so the form-hint bug goes away with the form. Ticket <a href="https://github.com/paulklecha/mega-dev-assignments/issues/2">#2</a> closed as not planned.</li>
+</ul>
+
 <h2>Count once, but count the right things</h2>
 <ul>
   <li>The export had 427 rows; its pages overlap, so 15 were the same report twice. Counted by id, #4471 holds <strong>412</strong> reports.</li>

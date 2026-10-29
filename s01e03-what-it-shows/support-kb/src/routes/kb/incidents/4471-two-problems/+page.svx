@@ -51,6 +51,13 @@ Ticket: [booking-v3 form hint stores wrong date](https://github.com/paulklecha/m
 - Five reports the desk read as a one-day move are still parser by cause; they are footnoted,
   not split out.
 
+## Resolved (desk, #4471 closed 05 Oct)
+
+- **parser — FIXED.** `fix(dates): parse dd/mm for eu locales`. Ticket
+  [#1](https://github.com/paulklecha/mega-dev-assignments/issues/1) closed as completed.
+- **hint — WON'T FIX.** booking-v3 form retired, so the form-hint bug goes away with the form.
+  Ticket [#2](https://github.com/paulklecha/mega-dev-assignments/issues/2) closed as not planned.
+
 ## Lessons
 
 - Merging on subject is fast, but it buries a second bug with the same symptom. Re-read the
